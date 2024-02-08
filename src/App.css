@@ -1,21 +1,22 @@
 .App {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  
+  
   height: 100vh;
+  right: 800px;
+  
 }
 .title{
-
-  text-align: center;
   line-height: 200px;
-  height: 100px;
+  height: 000px;
+  
   
 }
 .title2{
 
   position: relative;
   left: -350px;
-  line-height: 200px;
+  line-height: 300px;
   height: 000px;
   
 }
@@ -23,7 +24,7 @@
 
   position: relative;
   left: -650px;
-  line-height: 300px;
+  line-height: 400px;
   height: 000px;
   
 }
