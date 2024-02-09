@@ -6,22 +6,28 @@ import './App.css';
 function App() {
   const [ocrText, setOcrText] = useState('');
   const [imageDataUri, setImageDataUri] = useState(null);
-  const worker = createWorker({
-    logger: (m) => console.log(m),
-    errorHandler: (err) => {
-      console.log(err);
-      console.log('\u0007'); // Beep sound to alert
-      return err; // Return the error
-    },
-  });
-  
+  const [worker, setWorker] = useState(null);
+
+  useEffect(() => {
+    const initializeWorker = async () => {
+      const workerInstance = await createWorker();
+      await workerInstance.load();
+      await workerInstance.loadLanguage('eng');
+      await workerInstance.initialize('eng');
+      setWorker(workerInstance);
+    };
+
+    initializeWorker();
+
+    return () => {
+      if (worker) {
+        worker.terminate();
+      }
+    };
+  }, []);
 
   const convertImageToText = async () => {
-    if (!imageDataUri) return;
-
-    await worker.load();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
+    if (!imageDataUri || !worker) return;
 
     const { data: { text } } = await worker.recognize(imageDataUri);
     setOcrText(text);
@@ -29,7 +35,7 @@ function App() {
 
   useEffect(() => {
     convertImageToText();
-  }, [imageDataUri]);
+  }, [imageDataUri, worker]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
